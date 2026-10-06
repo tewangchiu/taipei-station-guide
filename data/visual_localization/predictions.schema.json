@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_sha256",
+    "config_sha256",
+    "predictions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "vl2-1"
+    },
+    "dataset_sha256": {
+      "type": "string",
+      "pattern": "[a-f0-9]{64}"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "[a-f0-9]{64}"
+    },
+    "predictions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sample_id",
+          "status",
+          "candidates",
+          "latency_ms",
+          "reason"
+        ],
+        "properties": {
+          "sample_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9_-]+"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "candidates",
+              "unknown",
+              "error",
+              "not_evaluated"
+            ]
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "node_id",
+                "raw_score",
+                "score_type",
+                "reason"
+              ],
+              "properties": {
+                "node_id": {
+                  "type": "string",
+                  "enum": [
+                    "Y28",
+                    "Y26",
+                    "Y23"
+                  ]
+                },
+                "raw_score": {
+                  "type": "number"
+                },
+                "score_type": {
+                  "type": "string",
+                  "enum": [
+                    "orb_inlier_count",
+                    "cosine_similarity",
+                    "ocr_weak_score"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "fixed_anchor_match",
+                    "weak_text_only",
+                    "ambiguous_visual_match"
+                  ]
+                }
+              }
+            },
+            "maxItems": 3
+          },
+          "latency_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "matched",
+              "below_threshold",
+              "ambiguous",
+              "no_landmark",
+              "weak_text_only",
+              "runtime_error",
+              "no_model"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

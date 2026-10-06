@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "config_version",
+    "model_version",
+    "preprocessing_version",
+    "score_type",
+    "accept_threshold",
+    "high_score_threshold",
+    "min_margin",
+    "calibration_split",
+    "hardware_label"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "vl2-1"
+    },
+    "config_version": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_-]+"
+    },
+    "model_version": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_-]+"
+    },
+    "preprocessing_version": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_-]+"
+    },
+    "score_type": {
+      "type": "string",
+      "enum": [
+        "orb_inlier_count",
+        "cosine_similarity",
+        "ocr_weak_score"
+      ]
+    },
+    "accept_threshold": {
+      "type": "number",
+      "minimum": 0
+    },
+    "high_score_threshold": {
+      "type": "number",
+      "minimum": 0
+    },
+    "min_margin": {
+      "type": "number",
+      "minimum": 0
+    },
+    "calibration_split": {
+      "const": "validation"
+    },
+    "hardware_label": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_-]+"
+    }
+  }
+}

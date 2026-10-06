@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_sha256",
+    "config_sha256",
+    "test_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "vl2-1"
+    },
+    "dataset_sha256": {
+      "type": "string",
+      "pattern": "[a-f0-9]{64}"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "[a-f0-9]{64}"
+    },
+    "test_sha256": {
+      "type": "string",
+      "pattern": "[a-f0-9]{64}"
+    }
+  }
+}

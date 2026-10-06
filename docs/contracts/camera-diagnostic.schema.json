@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Exported prototype diagnostic: camera/replay evidence source remains visible",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "camera-prototype-diagnostic-v1"
+    },
+    "prototype": {
+      "const": true
+    },
+    "inputSource": {
+      "enum": [
+        "camera",
+        "replay"
+      ]
+    },
+    "versions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "app": {
+          "enum": [
+            "camera-prototype-v1",
+            "camera-overlay-v1"
+          ]
+        },
+        "recognizer": {
+          "const": "camera-landmark-orb-ncc-v1"
+        },
+        "policy": {
+          "const": "camera-temporal-v1"
+        },
+        "route": {
+          "const": "y28-y26-y23.prototype-v1"
+        },
+        "references": {
+          "const": "run_01_manual_v1"
+        }
+      },
+      "required": [
+        "app",
+        "recognizer",
+        "policy",
+        "route",
+        "references"
+      ]
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "running",
+        "paused",
+        "error",
+        "stopped",
+        "completed"
+      ]
+    },
+    "recognizedNodes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "observations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rejectedObservations": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "runtimeErrors": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reasonCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "invalid_context": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "invalid_observation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "clock_moved_backwards": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "session_changed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "future_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stale_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "out_of_order_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "visual_evidence_rejected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unexpected_node": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "node_already_accepted": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stable_visual_landmark": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "awaiting_distinct_frames": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": []
+    },
+    "events": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "Sanitized anchor progress event; no timestamps or device/session identifiers",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "nodeId": {
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          },
+          "type": {
+            "const": "anchor_progressed"
+          },
+          "evidenceSource": {
+            "enum": [
+              "vision_experimental",
+              "manual_fallback"
+            ]
+          },
+          "inputSource": {
+            "enum": [
+              "camera",
+              "replay"
+            ]
+          }
+        },
+        "required": [
+          "sequence",
+          "nodeId",
+          "type",
+          "evidenceSource",
+          "inputSource"
+        ],
+        "$id": "camera-event.schema.json"
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fieldValidated": {
+          "const": false
+        },
+        "independentAccuracyVerified": {
+          "const": false
+        },
+        "navigationReady": {
+          "const": false
+        },
+        "imagesStored": {
+          "const": false
+        },
+        "imagesUploaded": {
+          "const": false
+        }
+      },
+      "required": [
+        "fieldValidated",
+        "independentAccuracyVerified",
+        "navigationReady",
+        "imagesStored",
+        "imagesUploaded"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "prototype",
+    "inputSource",
+    "versions",
+    "status",
+    "recognizedNodes",
+    "observations",
+    "rejectedObservations",
+    "runtimeErrors",
+    "reasonCounts",
+    "events",
+    "claims"
+  ],
+  "$id": "camera-diagnostic.schema.json"
+}

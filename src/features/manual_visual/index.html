@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#edf3f7">
+    <title>臺北車站通 · Y28 → Y23</title>
+    <link rel="stylesheet" href="/src/features/manual_visual/styles.css">
+  </head>
+  <body>
+    <main class="app-shell" id="app" aria-busy="true">
+      <header class="route-header">
+        <a class="brand" href="/" aria-label="臺北車站通首頁"><span class="brand-mark" aria-hidden="true">站</span>臺北車站通</a>
+        <span class="prototype-badge">路線預演</span>
+      </header>
+      <section class="route-map" aria-label="B1 主走廊路線示意，不是比例地圖或即時定位" id="route-overview"></section>
+      <div id="status-live" class="sr-only" aria-live="polite"></div>
+      <section class="guidance-sheet" aria-labelledby="screen-title">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <h1 id="screen-title" tabindex="-1">載入路線中</h1>
+        <div id="screen" class="screen-card"></div>
+      </section>
+      <aside class="safety-strip" aria-label="使用限制">
+        <strong>需比對固定牆標，位置由本人確認</strong>
+        <span>本原型不追蹤位置，不會自動判斷抵達。</span>
+      </aside>
+
+      <details class="session-tools" id="photo-tools" hidden>
+        <summary id="photo-heading">需要協助？拍照讀取牆標文字</summary>
+        <p>請先安全停下。照片只在本頁記憶體處理，不上傳、不存入事件 JSON。請避免拍到臉部、票券或個資。</p>
+        <input id="photo-input" type="file" accept="image/jpeg,image/png" capture="environment" hidden>
+        <div class="actions">
+          <button id="photo-take" type="button" class="button button-secondary" disabled>拍攝周遭／重拍</button>
+          <button id="photo-clear" type="button" class="button button-secondary">清除照片／取消</button>
+        </div>
+        <p id="photo-status" role="status" aria-live="polite"></p>
+        <div id="photo-preview" class="photo-preview"></div>
+        <p>上限 12 MiB、26 MP，預覽最長邊 960 px。請靠近並讓 Y28／Y26／Y23 固定牆標填滿畫面；方向牌文字也可能被讀到，所以候選必須由你人工確認。照片只在本頁記憶體暫存，不會上傳或寫入事件檔。清除 JS 記憶體不保證作業系統抹除影像。</p>
+      </details>
+
+      <details class="session-tools">
+        <summary>關於此路線與本機驗收資料</summary>
+        <p>僅支援 Y28 → Y26 → Y23 固定牆標。走廊示意不是量測平面圖，不代表即時位置。</p>
+        <details class="reference-details"><summary>步行參考怎麼估算？</summary>
+          <p>步行時間僅作粗略參考，不會觸發抵達；目前尚未完成獨立使用者驗證。</p>
+          <p>Y26 到 Y23 約 27–34 秒，因此顯示約半分鐘。Y26 的起算邊界是「行經時看見牆標的區間」，不是已確認抵達或離開 Y26 的時間。</p>
+          <p>時間從上次人工確認地標起算，不隨等待而倒數，未含確認與停留，並非即時預計抵達時間。沒有公尺或速度校準；走錯、低信心或中止會隱藏時間。</p>
+        </details>
+        <button type="button" class="button button-secondary" data-action="open-official-map">查看官方區域圖（2019）</button>
+        <p>參考照片須由獲授權的開發者另行在本機配置。單張照片不證明你的位置、朝向或樓層。</p>
+        <p>本機流程完成不代表現場驗證通過。station_ground_truth_passed=false；navigation_ready=false。</p>
+        <p>只含狀態與操作事件，不含 GPS、裝置 ID 或個人軌跡。</p>
+        <section class="ocr-camera-target-card" aria-label="Y26 合成 OCR 相機測試標靶">
+          <p><strong>相機預演標靶</strong>（不是位置證據）</p>
+          <div class="ocr-camera-target" role="img" aria-label="Y26">Y26</div>
+          <p>請在 Mac 顯示這個標靶，再用 iPhone 拍攝；只用來確認相機與本機 OCR 執行鏈。</p>
+        </section>
+        <div class="tool-row">
+          <button type="button" class="button button-secondary" data-action="ocr-self-test">執行 OCR 引擎自我測試</button>
+          <button type="button" class="button button-secondary" data-action="replay">本機重播驗證</button>
+          <button type="button" class="button button-secondary" data-action="export">匯出 JSON</button>
+        </div>
+        <output id="tool-result" aria-live="polite"></output>
+      </details>
+    </main>
+    <dialog id="route-map-dialog" class="map-dialog" aria-labelledby="route-map-title">
+      <div class="dialog-header"><h2 id="route-map-title">完整路線示意</h2><button type="button" class="button button-secondary" data-action="close-route-map" autofocus>關閉路線圖</button></div>
+      <div class="map-toolbar" aria-label="路線圖縮放">
+        <button type="button" class="button button-secondary" data-action="map-zoom-out" disabled>縮小</button>
+        <output id="map-zoom-label" aria-live="polite">圖面 1×</output>
+        <button type="button" class="button button-secondary" data-action="map-zoom-in">放大</button>
+      </div>
+      <p class="map-scroll-hint">放大後可捲動圖面；鍵盤可 Tab 至圖面，再用方向鍵捲動。</p>
+      <div id="route-map-viewport" class="map-viewport" tabindex="0" role="region" aria-label="完整路線圖，可用方向鍵捲動"><div id="route-map-content"></div></div>
+      <p class="map-reference-note">圖面只表示路線關係；標記是上次由你確認的地標。</p>
+      <button type="button" class="button button-secondary" data-action="open-official-map">查看官方區域圖（2019）</button>
+    </dialog>
+    <dialog id="official-map-dialog" class="map-dialog" aria-labelledby="official-map-title">
+      <div class="dialog-header"><h2 id="official-map-title">官方區域圖（2019）</h2><button type="button" class="button button-secondary" data-action="close-official-map" autofocus>關閉官方圖</button></div>
+      <p class="official-disclaimer">2019 官方參考圖；出口位置供對照，牆標位置尚未校對。</p>
+      <p class="official-disclaimer">原圖「現在位置」為看板位置，並非你的定位。圖中商家及設施不代表現況。</p>
+      <div class="map-toolbar" aria-label="官方圖範圍">
+        <button type="button" class="button button-secondary" data-action="official-west" aria-pressed="true">西側 Y 區</button>
+        <button type="button" class="button button-secondary" data-action="official-full" aria-pressed="false">完整官方圖</button>
+      </div>
+      <div class="map-toolbar" aria-label="官方圖縮放">
+        <button type="button" class="button button-secondary" data-action="official-zoom-out" disabled>縮小官方圖</button>
+        <output id="official-zoom-label" aria-live="polite">圖面 1×</output>
+        <button type="button" class="button button-secondary" data-action="official-zoom-in">放大官方圖</button>
+      </div>
+      <div id="official-map-content" data-official-reference></div>
+      <p class="map-scroll-hint">放大後可捲動；鍵盤可 Tab 至圖面，再用方向鍵捲動。</p>
+      <p class="map-reference-note"><a href="/references/official-b1-map-2019.pdf" target="_blank" rel="noopener">開啟原始 PDF（2019）</a> · 圖片與 PDF 皆原樣保存。</p>
+    </dialog>
+    <dialog id="landmark-dialog" aria-labelledby="dialog-title">
+      <div class="dialog-header"><h2 id="dialog-title">地標參考圖</h2><button class="button button-secondary" data-action="close-photo" autofocus>關閉</button></div>
+      <div id="dialog-landmark" data-landmark="">
+        <div class="landmark-image-button"><img id="dialog-image" alt=""></div>
+        <div class="landmark-fallback" hidden><strong id="dialog-node"></strong><p>參考照片暫時無法載入</p><span>請關閉參考圖，以現場固定牆標比對；無法確認就先停下。</span></div>
+      </div>
+      <p>請比對固定在牆面上的編號；方向牌只表示前往方向。</p>
+    </dialog>
+    <script type="module" src="/src/features/manual_visual/app.mjs"></script>
+  </body>
+</html>

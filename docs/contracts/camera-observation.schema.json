@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ephemeral observation: private frame identity; never an image payload",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "type": "boolean"
+    },
+    "nodeId": {
+      "enum": [
+        "Y28",
+        "Y26",
+        "Y23",
+        null
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "nodeId": {
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23"
+          ]
+        },
+        "inliers": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inlierRatio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "coverage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "correlation": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "contrast": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "elapsedMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "markerValidFraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "geometryValid": {
+          "type": "boolean"
+        },
+        "markerAreaFraction": {
+          "type": "number",
+          "minimum": 0
+        },
+        "markerShortSidePx": {
+          "type": "number",
+          "minimum": 0
+        },
+        "occupiedCells": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        }
+      },
+      "required": [
+        "inliers",
+        "correlation",
+        "contrast",
+        "coverage",
+        "elapsedMs"
+      ]
+    },
+    "capturedAtMs": {
+      "type": "number",
+      "minimum": 0
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "frameId": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "recognizerVersion": {
+      "const": "camera-landmark-orb-ncc-v1"
+    },
+    "evidenceMode": {
+      "const": "prototype"
+    },
+    "physicalArrivalVerified": {
+      "const": false
+    },
+    "candidates": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nodeId": {
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          },
+          "inliers": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "matches": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "inlierRatio": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "coverage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "correlation": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": -1,
+            "maximum": 1
+          },
+          "contrast": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "elapsedMs": {
+            "type": "number",
+            "minimum": 0
+          },
+          "markerValidFraction": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "geometryValid": {
+            "type": "boolean"
+          },
+          "markerAreaFraction": {
+            "type": "number",
+            "minimum": 0
+          },
+          "markerShortSidePx": {
+            "type": "number",
+            "minimum": 0
+          },
+          "occupiedCells": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 16
+          }
+        },
+        "required": []
+      }
+    },
+    "anchor": {
+      "description": "Optional backward-compatible image-plane overlay extension. Only accepted recognitions carry an anchor. Coordinates refer to the complete input image, before CSS object-fit cropping; never world AR or physical location.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/imageAnchor"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "accepted",
+    "nodeId",
+    "reason",
+    "metrics",
+    "capturedAtMs",
+    "sessionId",
+    "frameId"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "accepted": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "nodeId": {
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          },
+          "anchor": {
+            "$ref": "#/$defs/imageAnchor"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "nodeId": {
+            "type": "null"
+          },
+          "anchor": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "$id": "camera-observation.schema.json",
+  "$defs": {
+    "imageAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "coordinateSpace",
+        "imageSize",
+        "polygon",
+        "center"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "image-anchor-v1"
+        },
+        "coordinateSpace": {
+          "const": "normalized-image"
+        },
+        "imageSize": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "width",
+            "height"
+          ],
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8192
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8192
+            }
+          }
+        },
+        "polygon": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "x",
+              "y"
+            ],
+            "properties": {
+              "x": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "y": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        },
+        "center": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "y"
+          ],
+          "properties": {
+            "x": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "y": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

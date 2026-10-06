@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Experimental temporal decision; not physical arrival or a production gate",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "camera-temporal-v1"
+        },
+        "sessionId": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expectedNodeId": {
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23",
+            null
+          ]
+        },
+        "window": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "frameId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                ]
+              },
+              "capturedAtMs": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "frameId",
+              "capturedAtMs"
+            ]
+          }
+        },
+        "seenFrameIds": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "integer",
+                "minimum": 0
+              }
+            ]
+          }
+        },
+        "lastCapturedAtMs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "lastNowMs": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "acceptedNodeId": {
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23",
+            null
+          ]
+        }
+      },
+      "required": [
+        "version",
+        "sessionId",
+        "expectedNodeId",
+        "window",
+        "seenFrameIds",
+        "lastCapturedAtMs",
+        "lastNowMs",
+        "acceptedNodeId"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "accepted",
+        "stabilizing",
+        "rejected"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    }
+  },
+  "required": [
+    "state",
+    "decision",
+    "reason"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "accepted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reason": {
+            "const": "stable_visual_landmark"
+          },
+          "state": {
+            "properties": {
+              "acceptedNodeId": {
+                "enum": [
+                  "Y28",
+                  "Y26",
+                  "Y23"
+                ]
+              },
+              "window": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$id": "camera-decision.schema.json"
+}

@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Versioned route package: schema validity cannot certify the evidence references",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "route-package-v1"
+    },
+    "specVersion": {
+      "const": "camera-prototype-v1"
+    },
+    "routeId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "evidenceMode": {
+      "enum": [
+        "prototype",
+        "production"
+      ]
+    },
+    "navigationReady": {
+      "type": "boolean"
+    },
+    "physicalArrivalVerified": {
+      "type": "boolean"
+    },
+    "acceptanceRecordRef": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "nodeOrder": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {
+          "const": "Y28"
+        },
+        {
+          "const": "Y26"
+        },
+        {
+          "const": "Y23"
+        }
+      ],
+      "items": false
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nodeId": {
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "floor": {
+            "const": "B1"
+          },
+          "referenceImage": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "roi": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "items": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "referencePackId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "locationEvidenceStatus": {
+            "enum": [
+              "fixed_marker_visible_only",
+              "near_anchor_validated"
+            ]
+          },
+          "nearAnchorEvidenceRef": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "nodeId",
+          "label",
+          "floor",
+          "referenceImage",
+          "sha256",
+          "roi",
+          "referencePackId",
+          "locationEvidenceStatus"
+        ]
+      }
+    },
+    "segments": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fromNodeId": {
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          },
+          "toNodeId": {
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          },
+          "instruction": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "timeReference": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "kind": {
+                "const": "historical_recordings"
+              },
+              "notLiveEta": {
+                "const": true
+              },
+              "provenanceRef": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "label",
+              "kind",
+              "notLiveEta",
+              "provenanceRef"
+            ]
+          }
+        },
+        "required": [
+          "fromNodeId",
+          "toNodeId",
+          "instruction",
+          "timeReference"
+        ]
+      }
+    },
+    "map": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "schematic"
+        },
+        "notToScale": {
+          "const": true
+        }
+      },
+      "required": [
+        "kind",
+        "notToScale"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "specVersion",
+    "routeId",
+    "revision",
+    "evidenceMode",
+    "navigationReady",
+    "physicalArrivalVerified",
+    "nodeOrder",
+    "nodes",
+    "segments"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "evidenceMode": {
+            "const": "prototype"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "navigationReady": {
+            "const": false
+          },
+          "physicalArrivalVerified": {
+            "const": false
+          }
+        }
+      },
+      "else": {
+        "required": [
+          "acceptanceRecordRef"
+        ],
+        "properties": {
+          "navigationReady": {
+            "const": true
+          },
+          "physicalArrivalVerified": {
+            "const": true
+          },
+          "nodes": {
+            "items": {
+              "required": [
+                "nearAnchorEvidenceRef"
+              ],
+              "properties": {
+                "locationEvidenceStatus": {
+                  "const": "near_anchor_validated"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$id": "route-package.schema.json"
+}

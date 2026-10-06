@@ -1,0 +1,522 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:taipei-main-station:manual-visual-route:v1",
+  "title": "臺北車站通 Gate 4A 手動／視覺單一路線 fixture",
+  "description": "A deliberately non-navigation-ready fixture for the video-observed Y28 -> Y26 -> Y23 sequence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "route",
+    "nodes",
+    "steps",
+    "critical_unknowns",
+    "station_ground_truth_passed",
+    "navigation_ready",
+    "readiness"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "route": {
+      "$ref": "#/$defs/route"
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "critical_unknowns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/criticalUnknown"
+      }
+    },
+    "station_ground_truth_passed": {
+      "const": false
+    },
+    "navigation_ready": {
+      "const": false
+    },
+    "readiness": {
+      "$ref": "#/$defs/readiness"
+    }
+  },
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "candidate",
+        "unknown"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_type",
+        "source_id",
+        "retrieved_at",
+        "claim_scope",
+        "notes"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "video_annotation",
+            "mvp_contract",
+            "field_ground_truth",
+            "user_confirmed",
+            "official_map",
+            "osm_candidate",
+            "sensor_candidate",
+            "model_candidate",
+            "derived_calculation",
+            "unknown"
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retrieved_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "stringField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "booleanField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "type": "boolean"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "stringArrayOrUnknownField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "const": "unknown"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "integerOrUnknownField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "const": "unknown"
+            },
+            {
+              "type": "integer",
+              "minimum": 0
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "routeSequenceField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23"
+            ]
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "wrongRouteCandidatesField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "const": "unknown"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/wrongRouteCandidate"
+              }
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "wrongRouteCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "status",
+        "reason",
+        "provenance"
+      ],
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23"
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "version",
+        "label",
+        "sequence",
+        "ground_truth_status",
+        "provenance"
+      ],
+      "properties": {
+        "route_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "$ref": "#/$defs/routeSequenceField"
+        },
+        "ground_truth_status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "label",
+        "ground_truth_status",
+        "provenance",
+        "level_ref",
+        "visual_anchor_observed"
+      ],
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/stringField"
+        },
+        "ground_truth_status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "level_ref": {
+          "$ref": "#/$defs/stringField"
+        },
+        "visual_anchor_observed": {
+          "$ref": "#/$defs/booleanField"
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step_id",
+        "step_index",
+        "from_node_id",
+        "to_node_id",
+        "ground_truth_status",
+        "provenance",
+        "level_ref",
+        "direction",
+        "walkable_path",
+        "decision_points",
+        "instruction",
+        "landmark_ref",
+        "wrong_route_candidates",
+        "step_count"
+      ],
+      "properties": {
+        "step_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step_index": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2
+        },
+        "from_node_id": {
+          "type": "string",
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23"
+          ]
+        },
+        "to_node_id": {
+          "type": "string",
+          "enum": [
+            "Y28",
+            "Y26",
+            "Y23"
+          ]
+        },
+        "ground_truth_status": {
+          "$ref": "#/$defs/status"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "level_ref": {
+          "$ref": "#/$defs/stringField"
+        },
+        "direction": {
+          "$ref": "#/$defs/stringField"
+        },
+        "walkable_path": {
+          "$ref": "#/$defs/stringField"
+        },
+        "decision_points": {
+          "$ref": "#/$defs/stringArrayOrUnknownField"
+        },
+        "instruction": {
+          "$ref": "#/$defs/stringField"
+        },
+        "landmark_ref": {
+          "$ref": "#/$defs/stringField"
+        },
+        "wrong_route_candidates": {
+          "$ref": "#/$defs/wrongRouteCandidatesField"
+        },
+        "step_count": {
+          "$ref": "#/$defs/integerOrUnknownField"
+        }
+      }
+    },
+    "criticalUnknown": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "status",
+        "reason",
+        "provenance"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "enum": [
+            "nodes[].level_ref",
+            "steps[].level_ref",
+            "steps[].direction",
+            "steps[].walkable_path",
+            "steps[].decision_points",
+            "steps[].instruction",
+            "steps[].landmark_ref",
+            "steps[].wrong_route_candidates",
+            "steps[].step_count"
+          ]
+        },
+        "status": {
+          "const": "unknown"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "station_ground_truth_passed",
+        "navigation_ready"
+      ],
+      "properties": {
+        "station_ground_truth_passed": {
+          "$ref": "#/$defs/readinessField"
+        },
+        "navigation_ready": {
+          "$ref": "#/$defs/readinessField"
+        }
+      }
+    },
+    "readinessField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "provenance"
+      ],
+      "properties": {
+        "value": {
+          "const": false
+        },
+        "status": {
+          "const": "confirmed"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    }
+  }
+}

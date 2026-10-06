@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_version",
+    "evidence_kind",
+    "station_ground_truth_passed",
+    "navigation_ready",
+    "samples"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "vl2-1"
+    },
+    "dataset_version": {
+      "type": "string",
+      "pattern": "[A-Za-z0-9_-]+"
+    },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "real",
+        "synthetic"
+      ]
+    },
+    "station_ground_truth_passed": {
+      "const": false
+    },
+    "navigation_ready": {
+      "const": false
+    },
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sample_id",
+          "split",
+          "session_id",
+          "run_id",
+          "source_sha256",
+          "image_sha256",
+          "source_kind",
+          "source_interval_s",
+          "provenance_ref",
+          "derivation_ref",
+          "session_grouping_ref",
+          "location_evidence_ref",
+          "location_status",
+          "node_id",
+          "anchor_relation",
+          "conditions",
+          "privacy_review"
+        ],
+        "properties": {
+          "sample_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9_-]+"
+          },
+          "split": {
+            "type": "string",
+            "enum": [
+              "reference",
+              "query",
+              "validation",
+              "test"
+            ]
+          },
+          "session_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9_-]+"
+          },
+          "run_id": {
+            "type": "string",
+            "pattern": "[A-Za-z0-9_-]+"
+          },
+          "source_sha256": {
+            "type": "string",
+            "pattern": "[a-f0-9]{64}"
+          },
+          "image_sha256": {
+            "type": "string",
+            "pattern": "[a-f0-9]{64}"
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": [
+              "photo",
+              "video_frame"
+            ]
+          },
+          "source_interval_s": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "minimum": 0
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "provenance_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "derivation_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "session_grouping_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "location_evidence_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "location_status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "unknown"
+            ]
+          },
+          "node_id": {
+            "type": "string",
+            "enum": [
+              "Y28",
+              "Y26",
+              "Y23",
+              "unknown"
+            ]
+          },
+          "anchor_relation": {
+            "type": "string",
+            "enum": [
+              "near_fixed_anchor",
+              "direction_only",
+              "distant_only",
+              "non_target",
+              "no_anchor",
+              "unresolved"
+            ]
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "clear",
+                "similar_corridor",
+                "non_target_sign",
+                "direction_arrow",
+                "distant_sign",
+                "blur",
+                "occlusion",
+                "distance",
+                "angle",
+                "low_light",
+                "no_landmark"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "privacy_review": {
+            "type": "string",
+            "enum": [
+              "approved_deidentified"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#103e40"><title>台北車站通 · 相機導引</title><link rel="stylesheet" href="/camera/styles.css"></head>
+<body><main class="app">
+<header class="brand"><a href="/camera" aria-label="台北車站通首頁"><span class="brand-icon" aria-hidden="true">↗</span>台北車站通</a><span class="lab">相機原型</span></header>
+<section id="welcome">
+<div class="hero"><p class="eyebrow">TAIPEI MAIN STATION / B1</p><h1>看著地標，<br>跟著路線走。</h1><p>開啟相機，讓 App 連續比對固定牆標，<br>自動更新下一段指引。</p><div class="route-title"><span>Y28</span><i>→</i><span>Y26</span><i>→</i><span>Y23</span></div><div class="hero-foot"><span>地下街主走廊</span><span>約 1–2 分鐘</span></div></div>
+<div class="section-heading"><h2>這次會經過的地標</h2><span>3 個固定牆標</span></div>
+<div class="landmark-strip"><figure><img src="/camera/assets/Y28.png" alt="起點 Y28 固定牆標"><figcaption><b>01 · Y28</b>起點</figcaption></figure><figure><img src="/camera/assets/Y26.png" alt="右側 Y26 固定牆標"><figcaption><b>02 · Y26</b>沿走廊直行</figcaption></figure><figure><img src="/camera/assets/Y23.png" alt="終點 Y23 固定牆標"><figcaption><b>03 · Y23</b>終點</figcaption></figure></div>
+<div class="notice"><b>先試操作，再做現場驗證</b><p>這是相機辨識的實驗原型。地圖顯示地標進度，不是即時定位；步行時間只作參考。現場辨識與抵達距離仍待測試。</p></div>
+<button id="start-camera" class="primary">開啟相機導引 <span aria-hidden="true">↗</span></button>
+<p class="permission-note">影像只在裝置上處理，不錄音、不儲存或上傳。<br>開啟時才會向你要求相機權限。</p>
+<button id="start-replay" class="secondary">先看自動導引示範</button>
+<p class="replay-note">示範使用已核准的參考照片，逐張送入相同辨識流程。</p>
+<a class="legacy" href="/">使用原本的人工確認版本 →</a>
+</section>
+<section id="journey" hidden aria-label="相機導引">
+<div class="viewfinder" id="viewfinder"><video id="camera-video" muted playsinline hidden aria-label="相機畫面"></video><img id="replay-image" alt="導引示範照片" hidden><div class="viewfinder-shade"></div>
+<svg id="landmark-outline" class="landmark-outline" aria-hidden="true" hidden><polygon id="landmark-polygon"/></svg>
+<div id="landmark-overlay" class="landmark-overlay" hidden><span id="landmark-state" class="landmark-state">看到地標</span><strong id="landmark-name"></strong><span class="anchor-stem" aria-hidden="true"></span><span class="anchor-dot" aria-hidden="true"></span></div>
+</div>
+<nav class="camera-toolbar" aria-label="導引操作"><button id="end" class="glass-button icon-button" aria-label="結束導引">‹</button><span id="source-chip" class="source-chip" hidden>示範</span><button id="open-tools" class="glass-button icon-button" aria-label="開啟協助與設定">•••</button></nav>
+<div class="bottom-stack">
+<p id="scan-feedback" class="scan-feedback" role="status" aria-live="polite">正在準備…</p>
+<section id="guidance" class="guidance" aria-label="下一步"><div class="instruction-row"><span id="direction-icon" class="direction-icon" aria-hidden="true">◎</span><div><div class="instruction-heading"><h1 id="instruction-title">找 Y28 牆標</h1><strong id="time-value">約 1–2 分鐘</strong></div><p id="instruction-detail">將牆標與周圍環境放進畫面</p></div></div>
+<button id="open-route" class="mini-map-button" aria-label="放大路線圖"><span id="mini-map"></span><span class="map-expand-icon" aria-hidden="true">⛶</span></button>
+<button id="resume" class="primary" hidden>繼續導引</button></section>
+<section id="arrival" class="arrival" hidden aria-live="polite"><span class="arrival-icon" aria-hidden="true">✓</span><h1 id="arrival-title">找到終點 Y23</h1><p id="arrival-description">這段路線完成了</p><button id="restart" class="primary">完成</button></section>
+</div>
+</section>
+<footer>台北車站通 · Y28 → Y26 → Y23<br><span>限定路線 prototype · 尚未通過現場導航驗收</span></footer>
+</main>
+<dialog id="route-dialog" class="sheet map-sheet" aria-labelledby="map-title"><div class="sheet-heading"><h2 id="map-title">B1 地下街</h2><button id="close-route" class="close-button" aria-label="關閉路線">×</button></div>
+<div class="map-tabs" role="group" aria-label="地圖種類"><button id="show-route-plan" aria-pressed="true">本段路線</button><button id="show-station-plan" aria-pressed="false">車站平面圖</button></div><p id="map-location" class="map-location"></p>
+<div id="station-map-options" hidden><label for="station-map-region">區域</label><select id="station-map-region"><option value="west">西側 Y 區</option><option value="full">完整平面圖</option></select><span>2019 年版</span></div>
+<div id="map-viewport" class="map-viewport" role="region" tabindex="0" aria-label="路線圖，放大後可捲動查看"><div id="map-content" data-zoom="1"><div id="route-map"></div><div id="station-plan" hidden><svg id="station-map-svg" data-loaded="false" viewBox="210 430 630 400" role="img" aria-label="2019年西側Y區車站平面圖；圖上現在位置屬於原看板"><image id="station-map-image" width="2500" height="1669"/></svg></div></div></div>
+<div id="station-map-fallback" class="map-fallback" hidden><p>平面圖暫時無法載入</p><button id="station-map-retry" class="secondary">重新載入</button></div>
+<div class="map-controls" aria-label="地圖縮放"><button id="map-zoom-out" aria-label="縮小地圖">−</button><output id="map-zoom-value">100%</output><button id="map-zoom-in" aria-label="放大地圖">＋</button><button id="map-reset">重設</button></div>
+<p id="map-footnote" class="secondary-copy">菱形標示上次更新的地標；路線未按實際比例繪製。</p><span id="progress-value" class="visually-hidden">0 / 3</span></dialog>
+<dialog id="tools-dialog" class="sheet"><div class="sheet-heading"><h2>需要幫忙嗎？</h2><button id="close-tools" class="close-button" aria-label="關閉協助">×</button></div>
+<button id="pause" class="secondary">暫停導引</button>
+<details id="recovery" class="recovery"><summary>找不到地標</summary><p id="recovery-instruction">先停下腳步，比對牆標與周圍環境。吊掛方向牌可能指向遠處，不能用來確認位置。</p><img id="target-photo" alt="目前目標的參考照片"><button id="manual" class="secondary">改用人工確認</button></details>
+<div id="replay-controls" class="replay-controls" hidden><label for="scene">示範畫面</label><select id="scene"><option value="auto">完整路線（自動播放）</option><option value="Y28">Y28 固定牆標</option><option value="direction">只有 Y26 方向牌</option><option value="unknown">無核准地標</option><option value="Y26">Y26 固定牆標</option><option value="Y23">Y23 固定牆標</option></select><p id="replay-stage">自動播放</p></div>
+<details class="about-guidance"><summary>關於這次導引</summary><p id="source-description"></p><p>本原型只辨識指定路線的牆標，尚未通過現場導航驗收。畫面疊標代表看見地標，不是持續定位；時間只作參考。</p><button id="diagnostics" class="text-button">查看測試紀錄</button></details>
+</dialog>
+<dialog id="manual-dialog"><h2>確認你看到的固定牆標</h2><p id="manual-description"></p><img id="manual-photo" alt="人工確認目標的參考照片"><p>請確認你面前是這個固定牆標，不是指向它的方向牌。</p><div class="dialog-actions"><button id="cancel-manual" class="secondary">取消</button><button id="confirm-manual" class="primary">確認並繼續</button></div></dialog>
+<dialog id="diagnostic-dialog"><h2>本次測試紀錄</h2><p>僅包含輸入模式、地標進度與辨識計數。不含照片、音訊或装置識別碼；關閉頁面即清除。</p><pre id="diagnostic-json"></pre><div class="dialog-actions"><button id="close-diagnostics" class="secondary">關閉</button><button id="export-diagnostics" class="primary">下載這份紀錄</button></div></dialog>
+<canvas id="frame" hidden></canvas><script type="module" src="/camera/app.mjs"></script></body></html>

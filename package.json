@@ -1,0 +1,18 @@
+{
+  "name": "taipei-station-guide",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local camera-guidance prototype; private route assets are not distributed.",
+  "scripts": {
+    "start:camera": "node scripts/serve_camera_guidance.mjs",
+    "start:manual-visual": "node scripts/serve_manual_visual.mjs",
+    "prepare:camera": "node scripts/prepare_camera_prototype.mjs",
+    "test": "node --test tests/camera_guidance_geometry.test.mjs tests/camera_guidance_policy.test.mjs tests/camera_guidance_session.test.mjs tests/camera_overlay.test.mjs tests/unit/manual_visual_machine.test.mjs tests/unit/visual_localization/decode.test.mjs tests/unit/visual_localization/ocr_recognizer.test.mjs tests/unit/visual_localization/panel.test.mjs tests/unit/visual_localization/self_test.test.mjs",
+    "check:repository": "node scripts/check_repository_hygiene.mjs",
+    "setup:hooks": "git config --local core.hooksPath .githooks"
+  },
+  "dependencies": {
+    "@tesseract.js-data/eng": "1.0.0",
+    "tesseract.js": "7.0.0"
+  }
+}
