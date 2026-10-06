@@ -1,14 +1,16 @@
-# 文件入口
+# 開發文件入口
 
-此 repository 僅維護可散布的程式碼與契約，不保存私人素材或歷史測試證據。
+本 repository 是程式碼、現行規格與開發決策的唯一正式來源。私人素材及歷史驗收不隨 repository 散布。文件的類型、負責角色、更新日與狀態集中在 [spec-index.json](spec-index.json)，不在各頁重複維護。
 
-| 內容 | 文件 |
+| 要做什麼 | 先讀 |
 |---|---|
-| 安裝、啟動與目前限制 | [README](../README.md) |
-| 目前行為與驗證界線 | [PRODUCT_SPEC](PRODUCT_SPEC.md) |
-| 授權素材的本機準備 | [LOCAL_ASSETS](LOCAL_ASSETS.md) |
-| 模組資料契約 | [contracts](contracts/) |
-| 協作及提交規則 | [AGENTS](../AGENTS.md) |
-| 安全與私人回報 | [SECURITY](../SECURITY.md) |
+| 理解產品範圍 | [產品摘要](PRODUCT_SPEC.md) |
+| 修改導航／辨識／地圖／隱私 | [領域規格索引](PRODUCT_SPEC.md#正式行為) |
+| 確认正式來源與工作規則 | [ADR：開發基礎](adr/0001-development-source-of-truth.md) |
+| 查產品假設與決策 | [決策紀錄](product/decisions.md)、[研究入口與模板](research/README.md) |
+| 查當前工作與執行拆解 | [change tracker](roadmap/change-tracker.md) |
+| 定義完成與驗證範圍 | [測試與驗收門檻](testing/gates.md)、[本次矩陣](testing/matrices/chg-2026-10-development-foundation.md) |
+| 本機開發與交接 | [開發 runbook](runbooks/development.md)、[素材準備](LOCAL_ASSETS.md) |
+| 讀取資料契約／舊編號 | [contracts](contracts/)、[legacy ID 對照](product/requirements-legacy-map.md) |
 
-產品需求以 `PRODUCT_SPEC.md` 為正式來源；schema 定義資料形狀。研究建議與 Issue 先標示假設及待驗證問題，採用後再更新規格與驗收條件。單元測試通過、素材載入成功及現場導航驗證是不同結果。
+研究、需求採用、實作完成、單元測試、私人素材驗證、實機／現場及發布是不同狀態。不要從文件存在或 CI 通過推定下一層也已通過。
