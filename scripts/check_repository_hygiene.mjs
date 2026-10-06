@@ -1,75 +1,179 @@
 #!/usr/bin/env node
-// Read index and every reachable commit. Report locations/types, never matched values.
+// Inspect non-ignored working files, the full index, and reachable history.
+// Findings contain locations/categories only, never matching values or Git stderr.
 import { execFileSync } from 'node:child_process';
+import { constants, closeSync, fstatSync, lstatSync, openSync, readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const git = (...args) => execFileSync('git', ['-C', root, ...args], { maxBuffer: 32 * 1024 * 1024 });
-const named = new Set([
-  '.gitignore', '.githooks/pre-push', 'AGENTS.md', 'README.md', 'SECURITY.md',
-  'package.json', 'package-lock.json',
-  'scripts/check_repository_hygiene.mjs', 'scripts/serve_camera_guidance.mjs',
-  'scripts/serve_manual_visual.mjs', 'scripts/prepare_camera_prototype.mjs',
-  'docs/index.md', 'docs/PRODUCT_SPEC.md', 'docs/LOCAL_ASSETS.md',
-]);
-const rules = [
-  ['machine_path', /\/(?:Users|Volumes|home|private)\/[^\s"'`<>]+|[A-Za-z]:\\(?:Users|Documents and Settings)\\/i],
-  ['private_network_address', /\b(?:192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})\b/],
-  ['private_key', /-----BEGIN (?:RSA |EC |OPENSSH |DSA |ENCRYPTED )?PRIVATE KEY-----/],
-  ['github_token', /\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{30,})\b/],
-  ['aws_access_key', /\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/],
-  ['api_token', /\b(?:sk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{24,}|xox[baprs]-[A-Za-z0-9-]{20,}|AIza[A-Za-z0-9_-]{30,})\b/],
-  ['credential_in_url', /https?:\/\/[^\s\/@:]+:[^\s\/@]+@/i],
-  ['credential_assignment', /(?:api[_-]?key|client[_-]?secret|access[_-]?token|password)\s*[=:]\s*["'][A-Za-z0-9_+\/=.-]{24,}["']/i],
-  ['email_address', /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/],
-];
-const findings = [], seen = new Set();
-let files = 0;
-function check(name, oid, mode, where) {
-  const key = `${name}:${oid}:${mode}`;
-  if (seen.has(key)) return; seen.add(key); files += 1;
-  const allowed = named.has(name)
-    || /^src\/[a-z0-9_/.-]+\.(?:mjs|css|html)$/.test(name)
-    || /^docs\/contracts\/[a-z0-9_-]+\.schema\.json$/.test(name)
-    || /^data\/(?:mvp|visual_localization)\/[a-z0-9_.-]+\.schema\.json$/.test(name)
-    || /^tests\/(?:unit\/)?(?:visual_localization\/)?[a-z0-9_]+\.test\.mjs$/.test(name);
-  const denied = /(?:^|\/)(?:raw_data|artifacts|reports|records|fixtures|node_modules|private|local|\.ssh|\.aws|\.codex|\.agents)(?:\/|$)/.test(name);
-  if (!allowed || denied) findings.push({ file: name, where, kind: 'path_not_allowlisted' });
-  if (!['100644', '100755'].includes(mode)) { findings.push({ file: name, where, kind: 'symlink_or_submodule' }); return; }
-  const bytes = git('cat-file', 'blob', oid);
-  if (bytes.length > 512 * 1024) { findings.push({ file: name, where, kind: 'oversized_file' }); return; }
+import { contentRules, isAllowedRepositoryPath } from './lib/repository_policy.mjs';
+
+const defaultRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const maxBytes = 512 * 1024;
+const splitLines = bytes => bytes.toString().trim().split('\n').filter(Boolean);
+const splitNull = bytes => bytes.toString().split('\0').filter(Boolean);
+const fingerprint = value => createHash('sha256').update(value).digest('hex').slice(0, 12);
+function safeFile(name) {
+  return contentRules.some(([, pattern]) => pattern.test(name))
+    ? `[redacted-path:${fingerprint(name)}]` : name.replace(/[\u0000-\u001f\u007f]/g, '?');
+}
+function contentFindings(bytes) {
+  if (bytes.length > maxBytes) return [{ kind: 'oversized_file' }];
   let text;
   try { text = new TextDecoder('utf-8', { fatal: true }).decode(bytes); }
-  catch { findings.push({ file: name, where, kind: 'non_text_file' }); return; }
-  if (bytes.includes(0)) findings.push({ file: name, where, kind: 'binary_content' });
-  for (const [kind, pattern] of rules) {
+  catch { return [{ kind: 'non_text_file' }]; }
+  const found = bytes.includes(0) ? [{ kind: 'binary_content' }] : [];
+  for (const [kind, pattern] of contentRules) {
     const match = pattern.exec(text);
-    if (match) findings.push({ file: name, where, kind, line: text.slice(0, match.index).split('\n').length });
+    if (match) found.push({ kind, line: text.slice(0, match.index).split('\n').length });
+  }
+  return found;
+}
+
+export function scanRepository(root = defaultRoot) {
+  root = path.resolve(root);
+  const git = (...args) => execFileSync('git', ['--no-replace-objects', '-C', root, ...args], {
+    maxBuffer: 32 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1' },
+  });
+  const findings = [], dedup = new Set(), blobCache = new Map(), fileVersions = new Set();
+  const coverage = {
+    workingTree: { trackedEntries: 0, untrackedEntries: 0, filesChecked: 0, missingEntries: 0, ignoredUntrackedInspected: false },
+    index: { entries: 0, filesChecked: 0 },
+    history: { commitsChecked: 0, annotatedTagsChecked: 0, fileEntriesChecked: 0, shallow: false, complete: false,
+      replacementObjectsDisabled: true, legacyGraftsDetected: false },
+  };
+  function report(location, problem, version = '') {
+    const finding = { ...location, ...problem };
+    if (finding.file) finding.file = safeFile(finding.file);
+    const key = JSON.stringify([finding.scope, finding.file, finding.kind, finding.line, version]);
+    if (!dedup.has(key)) { dedup.add(key); findings.push(finding); }
+  }
+  function inspectPath(name, location) {
+    if (!isAllowedRepositoryPath(name)) report(location, { kind: 'path_not_allowlisted' });
+    for (const [kind, pattern] of contentRules) if (pattern.test(name)) report(location, { kind: `filename_${kind}` });
+  }
+  function inspectObject(name, oid, mode, location) {
+    inspectPath(name, location);
+    fileVersions.add(`${name}:${oid}:${mode}`);
+    if (!['100644', '100755'].includes(mode)) { report(location, { kind: 'symlink_or_submodule' }, oid); return; }
+    if (!blobCache.has(oid)) {
+      const size = Number(git('cat-file', '-s', oid).toString());
+      blobCache.set(oid, size > maxBytes ? [{ kind: 'oversized_file' }] : contentFindings(git('cat-file', 'blob', oid)));
+    }
+    for (const problem of blobCache.get(oid)) report(location, problem, oid);
+  }
+  function inspectWorkingFile(name) {
+    const location = { scope: 'working_tree', file: name };
+    inspectPath(name, location);
+    const parts = name.split('/');
+    if (path.isAbsolute(name) || parts.some(part => !part || part === '.' || part === '..')) return;
+    let fd;
+    try {
+      // Do not follow either a file symlink or a symlinked parent into private data.
+      for (let i = 1; i <= parts.length; i++) {
+        const stat = lstatSync(path.join(root, ...parts.slice(0, i)));
+        if (stat.isSymbolicLink()) { report(location, { kind: 'symlink_or_submodule' }); return; }
+        if (i < parts.length && !stat.isDirectory()) { report(location, { kind: 'unsupported_file_type' }); return; }
+      }
+      fd = openSync(path.join(root, name), constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+      const stat = fstatSync(fd);
+      if (!stat.isFile()) { report(location, { kind: 'unsupported_file_type' }); return; }
+      coverage.workingTree.filesChecked += 1;
+      const problems = stat.size > maxBytes ? [{ kind: 'oversized_file' }] : contentFindings(readFileSync(fd));
+      for (const problem of problems) report(location, problem);
+    } catch (error) {
+      if (error.code === 'ENOENT') coverage.workingTree.missingEntries += 1;
+      else report(location, { kind: 'working_file_unreadable' });
+    } finally { if (fd !== undefined) closeSync(fd); }
+  }
+  function checkMetadata(kind, oid) {
+    const text = git('cat-file', kind, oid).toString();
+    for (const [rule, pattern] of contentRules) {
+      // The noreply exception applies only to email matching, never other rules.
+      const candidate = rule === 'email_address' ? text.replace(new RegExp(pattern.source, 'g'), email => {
+        const normalized = email.toLowerCase();
+        const domain = normalized.slice(normalized.lastIndexOf('@') + 1);
+        return domain === 'users.noreply.github.com' || normalized === ['noreply', 'github.com'].join('@')
+          ? '<github-noreply>' : email;
+      }) : text;
+      if (pattern.test(candidate)) report({ scope: 'history', where: oid.slice(0, 12) }, { kind: `${kind}_${rule}` }, oid);
+    }
+  }
+  try {
+    if (git('rev-parse', '--show-prefix').toString().trim()) throw new Error('Root must be repository root');
+    const graftPath = path.resolve(root, git('rev-parse', '--git-path', 'info/grafts').toString().trim());
+    try { lstatSync(graftPath); coverage.history.legacyGraftsDetected = true; }
+    catch (error) { if (error.code !== 'ENOENT') throw error; }
+    if (coverage.history.legacyGraftsDetected || process.env.GIT_GRAFT_FILE) {
+      report({ scope: 'history' }, { kind: 'legacy_grafts_not_allowed' });
+      // Git's no-replace option does not disable legacy graft traversal.
+      // Do not describe the rewritten graph as complete history coverage.
+      return finish();
+    }
+    coverage.history.shallow = git('rev-parse', '--is-shallow-repository').toString().trim() === 'true';
+    if (coverage.history.shallow) report({ scope: 'history' }, { kind: 'incomplete_shallow_history' });
+    const tracked = new Set(splitNull(git('ls-files', '--cached', '-z')));
+    const untracked = new Set(splitNull(git('ls-files', '--others', '--exclude-standard', '-z')));
+    coverage.workingTree.trackedEntries = tracked.size;
+    coverage.workingTree.untrackedEntries = untracked.size;
+    for (const name of new Set([...tracked, ...untracked])) inspectWorkingFile(name);
+
+    const staged = splitNull(git('ls-files', '--stage', '-z'));
+    coverage.index.entries = staged.length;
+    for (const entry of staged) {
+      const separator = entry.indexOf('\t'), meta = entry.slice(0, separator), name = entry.slice(separator + 1);
+      const [mode, oid, stage] = meta.split(' '), location = { scope: 'index', file: name };
+      if (stage !== '0') report(location, { kind: 'unmerged_index' });
+      else { coverage.index.filesChecked += 1; inspectObject(name, oid, mode, location); }
+    }
+    let hasHead = false;
+    try { git('rev-parse', '--verify', 'HEAD'); hasHead = true; } catch { /* New repository has no HEAD. */ }
+    const commits = splitLines(git('rev-list', '--all', ...(hasHead ? ['HEAD'] : [])));
+    coverage.history.commitsChecked = commits.length;
+    for (const commit of commits) {
+      checkMetadata('commit', commit);
+      for (const entry of splitNull(git('ls-tree', '-rz', '--full-tree', commit))) {
+        const separator = entry.indexOf('\t'), meta = entry.slice(0, separator), name = entry.slice(separator + 1);
+        const [mode, , oid] = meta.split(' ');
+        coverage.history.fileEntriesChecked += 1;
+        inspectObject(name, oid, mode, { scope: 'history', file: name, where: commit.slice(0, 12) });
+      }
+    }
+    const seenTags = new Set();
+    function inspectTag(oid) {
+      if (seenTags.has(oid)) return;
+      seenTags.add(oid); coverage.history.annotatedTagsChecked += 1; checkMetadata('tag', oid);
+      const body = git('cat-file', 'tag', oid).toString();
+      const target = /^object ([a-f0-9]{40,64})$/m.exec(body)?.[1];
+      const type = target && git('cat-file', '-t', target).toString().trim();
+      if (type === 'tag') inspectTag(target);
+      else if (type !== 'commit') report({ scope: 'history', where: oid.slice(0, 12) }, { kind: 'unsupported_tag_target' }, oid);
+    }
+    for (const tag of splitLines(git('for-each-ref', '--format=%(objecttype) %(objectname)', 'refs/tags'))) {
+      const [type, oid] = tag.split(' '); if (type === 'tag') inspectTag(oid);
+      else if (type !== 'commit') report({ scope: 'history', where: oid.slice(0, 12) }, { kind: 'unsupported_tag_target' }, oid);
+    }
+    coverage.history.complete = !coverage.history.shallow;
+  } catch {
+    // Git/OS exceptions can include absolute paths and sensitive command output.
+    report({ scope: 'inspection' }, { kind: 'inspection_failed' });
+  }
+  return finish();
+  function finish() {
+    return {
+      status: findings.length ? 'fail' : 'pass', coverage,
+      trackedEntries: coverage.index.entries, uniqueFileVersionsChecked: fileVersions.size,
+      reachableCommitsChecked: coverage.history.commitsChecked, findings,
+      scope: 'Non-ignored working files, full index (including ignored tracked files), reachable commits including HEAD, and annotated tags. Ignored untracked files are not inspected. Pattern checks do not prove absence of all secrets or vulnerabilities.',
+    };
   }
 }
-const staged = git('ls-files', '--stage', '-z').toString().split('\0').filter(Boolean);
-for (const entry of staged) {
-  const [meta, name] = entry.split('\t'), [mode, oid, stage] = meta.split(' ');
-  if (stage !== '0') findings.push({ file: name, kind: 'unmerged_index' });
-  else check(name, oid, mode, 'index');
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const args = process.argv.slice(2);
+  const valid = args.length === 0 || (args.length === 2 && args[0] === '--root' && args[1]);
+  const result = valid ? scanRepository(args[1] ?? defaultRoot) : { status: 'fail', findings: [{ kind: 'invalid_arguments' }] };
+  console.log(JSON.stringify(result, null, 2));
+  process.exitCode = result.status === 'pass' ? 0 : 1;
 }
-const commits = git('rev-list', '--all').toString().trim().split('\n').filter(Boolean);
-function checkMetadata(kind, oid) {
-  const text = git('cat-file', kind, oid).toString()
-    .replace(/\b[A-Za-z0-9._%+-]+@users\.noreply\.github\.com\b/g, '<github-noreply>')
-    .replace(/\bnoreply@github\.com\b/g, '<github-noreply>');
-  for (const [rule, pattern] of rules) if (pattern.test(text)) findings.push({ where: oid.slice(0, 12), kind: `${kind}_${rule}` });
-}
-for (const commit of commits) {
-  checkMetadata('commit', commit);
-  for (const entry of git('ls-tree', '-rz', '--full-tree', commit).toString().split('\0').filter(Boolean)) {
-    const [meta, name] = entry.split('\t'), [mode, , oid] = meta.split(' ');
-    check(name, oid, mode, commit.slice(0, 12));
-  }
-}
-const tags = git('for-each-ref', '--format=%(objecttype) %(objectname)', 'refs/tags').toString().trim().split('\n').filter(Boolean);
-for (const tag of tags) { const [type, oid] = tag.split(' '); if (type === 'tag') checkMetadata('tag', oid); }
-console.log(JSON.stringify({ status: findings.length ? 'fail' : 'pass', trackedEntries: staged.length,
-  uniqueFileVersionsChecked: files, reachableCommitsChecked: commits.length, findings,
-  scope: 'Allowlisted tracked content and reachable history; pattern checks do not prove absence of all secrets or vulnerabilities' }, null, 2));
-process.exitCode = findings.length ? 1 : 0;

@@ -1,0 +1,646 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "id": "taipei-station-guide",
+    "scope": "code-only-development"
+  },
+  "documents": [
+    {
+      "id": "entry",
+      "path": "docs/index.md",
+      "kind": "entry",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "development-navigation"
+    },
+    {
+      "id": "product-summary",
+      "path": "docs/PRODUCT_SPEC.md",
+      "kind": "summary",
+      "status": "in-progress",
+      "owner": "product-owner",
+      "updated": "2026-10-06",
+      "scope": "product-summary-only"
+    },
+    {
+      "id": "local-assets",
+      "path": "docs/LOCAL_ASSETS.md",
+      "kind": "runbook",
+      "status": "in-progress",
+      "owner": "data-owner",
+      "updated": "2026-10-06",
+      "scope": "authorized-local-assets"
+    },
+    {
+      "id": "registry",
+      "path": "docs/spec-index.json",
+      "kind": "registry",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "documentation-and-verification-index"
+    },
+    {
+      "id": "source-of-truth",
+      "path": "docs/adr/0001-development-source-of-truth.md",
+      "kind": "decision",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "development-governance"
+    },
+    {
+      "id": "product-decisions",
+      "path": "docs/product/decisions.md",
+      "kind": "decision",
+      "status": "in-progress",
+      "owner": "product-owner",
+      "updated": "2026-10-06",
+      "scope": "adopted-and-pending-product-decisions"
+    },
+    {
+      "id": "legacy-id-map",
+      "path": "docs/product/requirements-legacy-map.md",
+      "kind": "mapping",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "requirement-id-provenance"
+    },
+    {
+      "id": "research-entry",
+      "path": "docs/research/README.md",
+      "kind": "reference",
+      "status": "in-progress",
+      "owner": "product-owner",
+      "updated": "2026-10-06",
+      "scope": "research-to-decision-template"
+    },
+    {
+      "id": "test-gates",
+      "path": "docs/testing/gates.md",
+      "kind": "gate",
+      "status": "in-progress",
+      "owner": "reviewer",
+      "updated": "2026-10-06",
+      "scope": "evidence-tiers-and-completion"
+    },
+    {
+      "id": "foundation-matrix",
+      "path": "docs/testing/matrices/chg-2026-10-development-foundation.md",
+      "kind": "matrix",
+      "status": "in-progress",
+      "owner": "reviewer",
+      "updated": "2026-10-06",
+      "scope": "foundation-acceptance-only"
+    },
+    {
+      "id": "change-tracker",
+      "path": "docs/roadmap/change-tracker.md",
+      "kind": "tracker",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "change-navigation"
+    },
+    {
+      "id": "development-runbook",
+      "path": "docs/runbooks/development.md",
+      "kind": "runbook",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "local-development-and-handoff"
+    },
+    {
+      "id": "navigation",
+      "path": "openspec/specs/navigation/spec.md",
+      "kind": "spec",
+      "status": "in-progress",
+      "owner": "product-owner",
+      "updated": "2026-10-06",
+      "scope": "navigation-session-and-recovery"
+    },
+    {
+      "id": "visual-localization",
+      "path": "openspec/specs/visual-localization/spec.md",
+      "kind": "spec",
+      "status": "in-progress",
+      "owner": "vision-owner",
+      "updated": "2026-10-06",
+      "scope": "pixel-evidence-and-overlay"
+    },
+    {
+      "id": "route-data",
+      "path": "openspec/specs/route-data/spec.md",
+      "kind": "spec",
+      "status": "in-progress",
+      "owner": "data-owner",
+      "updated": "2026-10-06",
+      "scope": "maps-route-package-and-assets"
+    },
+    {
+      "id": "privacy",
+      "path": "openspec/specs/privacy/spec.md",
+      "kind": "spec",
+      "status": "in-progress",
+      "owner": "privacy-owner",
+      "updated": "2026-10-06",
+      "scope": "camera-data-lifecycle"
+    },
+    {
+      "id": "foundation-proposal",
+      "path": "openspec/changes/chg-2026-10-development-foundation/proposal.md",
+      "kind": "change",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "development-foundation"
+    },
+    {
+      "id": "foundation-plan",
+      "path": "openspec/changes/chg-2026-10-development-foundation/plan.md",
+      "kind": "plan",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "development-foundation-execution"
+    },
+    {
+      "id": "readme",
+      "path": "README.md",
+      "kind": "entry",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "setup-and-distribution-boundary"
+    },
+    {
+      "id": "agent-entry",
+      "path": "AGENTS.md",
+      "kind": "entry",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "agent-navigation"
+    },
+    {
+      "id": "security",
+      "path": "SECURITY.md",
+      "kind": "runbook",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "security-and-private-reporting"
+    },
+    {
+      "id": "pull-request-template",
+      "path": ".github/pull_request_template.md",
+      "kind": "template",
+      "status": "in-progress",
+      "owner": "maintainer",
+      "updated": "2026-10-06",
+      "scope": "change-and-evidence-handoff"
+    },
+    {
+      "id": "contract-data-mvp-manual_visual_route",
+      "path": "data/mvp/manual_visual_route.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-data-visual_localization-config",
+      "path": "data/visual_localization/config.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-data-visual_localization-dataset",
+      "path": "data/visual_localization/dataset.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-data-visual_localization-lock",
+      "path": "data/visual_localization/lock.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-data-visual_localization-predictions",
+      "path": "data/visual_localization/predictions.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-docs-contracts-camera-decision",
+      "path": "docs/contracts/camera-decision.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-docs-contracts-camera-diagnostic",
+      "path": "docs/contracts/camera-diagnostic.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-docs-contracts-camera-event",
+      "path": "docs/contracts/camera-event.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-docs-contracts-camera-observation",
+      "path": "docs/contracts/camera-observation.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-docs-contracts-image-anchor",
+      "path": "docs/contracts/image-anchor.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    },
+    {
+      "id": "contract-docs-contracts-route-package",
+      "path": "docs/contracts/route-package.schema.json",
+      "kind": "contract",
+      "status": "active",
+      "owner": "engineering",
+      "updated": "2026-10-06",
+      "scope": "schema-contract-only"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "NAV-01",
+      "spec": "openspec/specs/navigation/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "相機 adapter 與 session 控制的部分程式案例；不是實際 permission UI。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：啟動、拒絕權限、缺資產、返回／重試與人工入口；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-02",
+      "spec": "openspec/specs/navigation/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_policy.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "時序與錯序拒絕，需以本輪版本執行。"
+        },
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "有序進度與來源事件；不證 pixels 或實際抵達。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-03",
+      "spec": "openspec/specs/navigation/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_policy.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "重複、過期、session／時鐘與未知邊界。"
+        },
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "暫停、舊結果、manual 來源的程式案例。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：重新掃描、失敗復原及 UI 來源呈現；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-04",
+      "spec": "openspec/specs/visual-localization/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_geometry.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "實際影像座標與非法幾何純程式案例。"
+        },
+        {
+          "path": "tests/camera_overlay.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "cover／不可見拒絕／展示期限與位置純程式案例。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：viewport 改變、unknown／暫停清標與全幅畫面；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-05",
+      "spec": "openspec/specs/route-data/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_route_map.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "小圖／大圖進度一致、人工來源與唯讀 renderer；不證 DOM 互動或比例。"
+        },
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "有序進度不由 elapsed time 推進。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：底部指引與歷史時間的使用者呈現；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-06",
+      "spec": "openspec/specs/route-data/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_route_map.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "大小 renderer 的節點／路段語意及無 mutation；不是 dialog／圖資載入測試。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：展開、切換、縮放、捲動、失敗重試與返回；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-07",
+      "spec": "openspec/specs/visual-localization/spec.md",
+      "checks": [
+        {
+          "path": "src/features/camera_guidance/app.mjs",
+          "tier": "static",
+          "status": "pending",
+          "note": "回讀相同 recognizer／policy 呼叫與 replay 來源；讀碼不證 pixel runtime。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：授權照片進同一管線、示範來源與失敗行為；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "NAV-08",
+      "spec": "openspec/specs/navigation/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "終點、來源、idempotency 與相機 adapter 回收的部分程式案例。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：視覺／人工完成文案、停止 tracks 與重啟；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "VL-01",
+      "spec": "openspec/specs/visual-localization/spec.md",
+      "checks": [
+        {
+          "path": "src/features/camera_guidance/recognizer.mjs",
+          "tier": "static",
+          "status": "pending",
+          "note": "回讀 pixel/context 與拒絕路徑；不宣稱辨識品質。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：核准正例與方向牌／模糊／未知 pixels；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "field",
+          "status": "needs-data",
+          "note": "G3／G4：獨立拍攝與 Ground Truth；目前只列驗證條件。"
+        }
+      ]
+    },
+    {
+      "id": "VL-02",
+      "spec": "openspec/specs/visual-localization/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_policy.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "bounded window、duplicate／stale／wrong order／session 的純政策案例。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：實際 decoded mediaTime 凍結、in-flight 與來源切換；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "ROUTE-01",
+      "spec": "openspec/specs/route-data/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_route_contract.test.mjs",
+          "tier": "contract",
+          "status": "pending",
+          "note": "route schema 正反 instance 與 runtime 前置檢查分開；不代表其他 schema instance coverage。"
+        },
+        {
+          "path": "scripts/check_docs.mjs",
+          "tier": "static",
+          "status": "pending",
+          "note": "全部已索引 schema 可編譯；不是 runtime 套用完整 schema validator。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：獲授權路線／參考完整性與資產載入失敗；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "PRIV-01",
+      "spec": "openspec/specs/privacy/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "相機 adapter late／insecure request 部分案例；不證瀏覽器權限完整旅程。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：未啟用／replay 不請求 camera、audio 與額外權限；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "PRIV-02",
+      "spec": "openspec/specs/privacy/spec.md",
+      "checks": [
+        {
+          "path": "tests/camera_guidance_session.test.mjs",
+          "tier": "unit",
+          "status": "pending",
+          "note": "停止、late permission 與 session 隔離的部分案例。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：背景／離頁／完成／換來源的實際 tracks 與 in-flight 清除；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "device",
+          "status": "needs-data",
+          "note": "G3：指定真機資源釋放與前背景；目前為驗證條件。"
+        }
+      ]
+    },
+    {
+      "id": "PRIV-03",
+      "spec": "openspec/specs/privacy/spec.md",
+      "checks": [
+        {
+          "path": "src/features/camera_guidance/app.mjs",
+          "tier": "static",
+          "status": "pending",
+          "note": "回讀資料流與錯誤路徑；不替代網路／storage runtime 觀察。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：正常／錯誤／retry 的 network、storage 與 camera pixels 資料流；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    },
+    {
+      "id": "PRIV-04",
+      "spec": "openspec/specs/privacy/spec.md",
+      "checks": [
+        {
+          "path": "scripts/check_docs.mjs",
+          "tier": "static",
+          "status": "pending",
+          "note": "diagnostic schema 編譯；未宣稱有全部 payload 正反例。"
+        },
+        {
+          "path": "src/features/camera_guidance/app.mjs",
+          "tier": "static",
+          "status": "pending",
+          "note": "回讀診斷欄位選擇與主動下載入口。"
+        },
+        {
+          "path": "docs/testing/gates.md",
+          "tier": "browser",
+          "status": "needs-data",
+          "note": "G2：預覽、取消、下載內容與輸入／事件來源；目前只有驗證計畫，需另備授權資產／瀏覽器環境。"
+        }
+      ]
+    }
+  ],
+  "changes": [
+    {
+      "id": "chg-2026-10-development-foundation",
+      "path": "openspec/changes/chg-2026-10-development-foundation/proposal.md",
+      "status": "in-progress",
+      "plan": "openspec/changes/chg-2026-10-development-foundation/plan.md",
+      "matrix": "docs/testing/matrices/chg-2026-10-development-foundation.md",
+      "requirements": [
+        "NAV-01",
+        "NAV-02",
+        "NAV-03",
+        "NAV-04",
+        "NAV-05",
+        "NAV-06",
+        "NAV-07",
+        "NAV-08",
+        "VL-01",
+        "VL-02",
+        "ROUTE-01",
+        "PRIV-01",
+        "PRIV-02",
+        "PRIV-03",
+        "PRIV-04"
+      ]
+    }
+  ]
+}
