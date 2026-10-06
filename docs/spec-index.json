@@ -9,7 +9,7 @@
       "id": "entry",
       "path": "docs/index.md",
       "kind": "entry",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "development-navigation"
@@ -18,7 +18,7 @@
       "id": "product-summary",
       "path": "docs/PRODUCT_SPEC.md",
       "kind": "summary",
-      "status": "in-progress",
+      "status": "active",
       "owner": "product-owner",
       "updated": "2026-10-06",
       "scope": "product-summary-only"
@@ -27,7 +27,7 @@
       "id": "local-assets",
       "path": "docs/LOCAL_ASSETS.md",
       "kind": "runbook",
-      "status": "in-progress",
+      "status": "active",
       "owner": "data-owner",
       "updated": "2026-10-06",
       "scope": "authorized-local-assets"
@@ -36,7 +36,7 @@
       "id": "registry",
       "path": "docs/spec-index.json",
       "kind": "registry",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "documentation-and-verification-index"
@@ -45,7 +45,7 @@
       "id": "source-of-truth",
       "path": "docs/adr/0001-development-source-of-truth.md",
       "kind": "decision",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "development-governance"
@@ -54,7 +54,7 @@
       "id": "product-decisions",
       "path": "docs/product/decisions.md",
       "kind": "decision",
-      "status": "in-progress",
+      "status": "active",
       "owner": "product-owner",
       "updated": "2026-10-06",
       "scope": "adopted-and-pending-product-decisions"
@@ -63,7 +63,7 @@
       "id": "legacy-id-map",
       "path": "docs/product/requirements-legacy-map.md",
       "kind": "mapping",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "requirement-id-provenance"
@@ -72,7 +72,7 @@
       "id": "research-entry",
       "path": "docs/research/README.md",
       "kind": "reference",
-      "status": "in-progress",
+      "status": "active",
       "owner": "product-owner",
       "updated": "2026-10-06",
       "scope": "research-to-decision-template"
@@ -81,7 +81,7 @@
       "id": "test-gates",
       "path": "docs/testing/gates.md",
       "kind": "gate",
-      "status": "in-progress",
+      "status": "active",
       "owner": "reviewer",
       "updated": "2026-10-06",
       "scope": "evidence-tiers-and-completion"
@@ -90,7 +90,7 @@
       "id": "foundation-matrix",
       "path": "docs/testing/matrices/chg-2026-10-development-foundation.md",
       "kind": "matrix",
-      "status": "in-progress",
+      "status": "local-validated",
       "owner": "reviewer",
       "updated": "2026-10-06",
       "scope": "foundation-acceptance-only"
@@ -99,7 +99,7 @@
       "id": "change-tracker",
       "path": "docs/roadmap/change-tracker.md",
       "kind": "tracker",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "change-navigation"
@@ -108,7 +108,7 @@
       "id": "development-runbook",
       "path": "docs/runbooks/development.md",
       "kind": "runbook",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "local-development-and-handoff"
@@ -117,7 +117,7 @@
       "id": "navigation",
       "path": "openspec/specs/navigation/spec.md",
       "kind": "spec",
-      "status": "in-progress",
+      "status": "active",
       "owner": "product-owner",
       "updated": "2026-10-06",
       "scope": "navigation-session-and-recovery"
@@ -126,7 +126,7 @@
       "id": "visual-localization",
       "path": "openspec/specs/visual-localization/spec.md",
       "kind": "spec",
-      "status": "in-progress",
+      "status": "active",
       "owner": "vision-owner",
       "updated": "2026-10-06",
       "scope": "pixel-evidence-and-overlay"
@@ -135,7 +135,7 @@
       "id": "route-data",
       "path": "openspec/specs/route-data/spec.md",
       "kind": "spec",
-      "status": "in-progress",
+      "status": "active",
       "owner": "data-owner",
       "updated": "2026-10-06",
       "scope": "maps-route-package-and-assets"
@@ -144,7 +144,7 @@
       "id": "privacy",
       "path": "openspec/specs/privacy/spec.md",
       "kind": "spec",
-      "status": "in-progress",
+      "status": "active",
       "owner": "privacy-owner",
       "updated": "2026-10-06",
       "scope": "camera-data-lifecycle"
@@ -153,7 +153,7 @@
       "id": "foundation-proposal",
       "path": "openspec/changes/chg-2026-10-development-foundation/proposal.md",
       "kind": "change",
-      "status": "in-progress",
+      "status": "local-validated",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "development-foundation"
@@ -162,7 +162,7 @@
       "id": "foundation-plan",
       "path": "openspec/changes/chg-2026-10-development-foundation/plan.md",
       "kind": "plan",
-      "status": "in-progress",
+      "status": "local-validated",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "development-foundation-execution"
@@ -171,7 +171,7 @@
       "id": "readme",
       "path": "README.md",
       "kind": "entry",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "setup-and-distribution-boundary"
@@ -180,7 +180,7 @@
       "id": "agent-entry",
       "path": "AGENTS.md",
       "kind": "entry",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "agent-navigation"
@@ -189,7 +189,7 @@
       "id": "security",
       "path": "SECURITY.md",
       "kind": "runbook",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "security-and-private-reporting"
@@ -198,7 +198,7 @@
       "id": "pull-request-template",
       "path": ".github/pull_request_template.md",
       "kind": "template",
-      "status": "in-progress",
+      "status": "active",
       "owner": "maintainer",
       "updated": "2026-10-06",
       "scope": "change-and-evidence-handoff"
@@ -621,7 +621,7 @@
     {
       "id": "chg-2026-10-development-foundation",
       "path": "openspec/changes/chg-2026-10-development-foundation/proposal.md",
-      "status": "in-progress",
+      "status": "local-validated",
       "plan": "openspec/changes/chg-2026-10-development-foundation/plan.md",
       "matrix": "docs/testing/matrices/chg-2026-10-development-foundation.md",
       "requirements": [

@@ -12,12 +12,12 @@ Metadata 與總狀態以 [registry](../../../docs/spec-index.json) 為準；完�
 
 ## Tasks
 
-- [ ] FND-1：四領域規格、摘要、legacy 對照與唯一正式來源 ADR 完成回讀。
-- [ ] FND-2：registry、decisions、research、tracker、runbook 互相連通，沒有重複 metadata 或漂移的正式條文。
-- [ ] FND-3：單一 check 入口與 Node／CI 設定完成，允許程式測試發現且拒絕不允許的 fixtures／符號連結。
-- [ ] FND-4：route schema／runtime 邊界、map 純程式行為與工具正反例完成。
-- [ ] FND-5：DF-01～07 依目前版本檢查並記錄；處理 reviewer 的阻擋項。
-- [ ] FND-6：統籌回讀並更新本輪狀態，產品未驗證 gates 保留，不上傳私人證據。
+- [x] FND-1：四領域規格、摘要、legacy 對照與唯一正式來源 ADR 完成回讀。
+- [x] FND-2：registry、decisions、research、tracker、runbook 互相連通，沒有重複 metadata 或漂移的正式條文。
+- [x] FND-3：單一 check 入口與 Node／CI 設定完成，允許程式測試發現且拒絕不允許的 fixtures／符號連結。
+- [x] FND-4：route schema／runtime 邊界、map 純程式行為與工具正反例完成。
+- [x] FND-5：DF-01～07 依目前版本檢查並記錄；處理 reviewer 的阻擋項。
+- [x] FND-6：統籌回讀並更新本輪狀態，產品未驗證 gates 保留，不上傳私人證據。
 
 ## 取捨與風險
 
@@ -27,4 +27,4 @@ registry 用 JSON 以沿用現有 runtime，不為索引另引 YAML 依賴。sch
 
 ## Resume context
 
-本檔建立時進度為 in-progress，tasks 尚未核驗；統籌確認後勾選並在 matrix 記命令／版本／結果。先完成文件與 checker 契約對齊，再跑單一入口，最後做獨立 diff 與資料邊界審查。缺私人素材不是本輪純程式檢查的通過證據，也不是要求取得新素材的授權。
+本輪開發基礎已完成本機驗證，受測實作為 `8dd49b0420b58ec2627680b525aef05df40a6d4a`。獨立 review 的阻擋項已修復，乾淨 checkout 安裝與 `npm run check` 通過；詳見 matrix。後續變更新開 change，不追加此已完成範圍。GitHub CI 尚未執行，G2～G5 保留 needs-data／future；缺私人素材不授權取得新素材。
